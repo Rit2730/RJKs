@@ -1,6 +1,5 @@
 import streamlit as st
 import pandas as pd
-import plotly.express as px
 
 # -------------------------
 # App Title and Description
@@ -44,27 +43,28 @@ st.subheader("📊 Investment Portfolio Data")
 st.dataframe(df, use_container_width=True)
 
 # -------------------------
-# Pie Chart - Allocation
+# Pie Chart - Allocation (using Streamlit built-in chart)
 # -------------------------
-fig = px.pie(
-    df,
-    values="Percent of Allocation",
-    names="Asset Class",
-    title="Portfolio Allocation by Asset Class",
-    color_discrete_sequence=px.colors.sequential.Tealgrn
-)
-st.plotly_chart(fig, use_container_width=True)
+st.subheader("📈 Portfolio Allocation by Asset Class")
+chart_data = pd.DataFrame({
+    "Asset Class": df["Asset Class"],
+    "Allocation (%)": df["Percent of Allocation"]
+})
+chart_data = chart_data.set_index("Asset Class")
+st.bar_chart(chart_data)
 
 # -------------------------
 # Summary Stats
 # -------------------------
-st.subheader("📈 Portfolio Summary")
+st.subheader("📘 Portfolio Summary")
 
 average_allocation = df["Percent of Allocation"].mean()
 
-st.write(f"**Average Allocation per Asset:** {average_allocation:.2f}%")
-st.write("**Overall Risk Level:** Very Low")
-st.write("**Investment Objective:** Stable and tax-efficient income generation")
+st.markdown(f"""
+- **Average Allocation per Asset:** {average_allocation:.2f}%  
+- **Overall Risk Level:** Very Low  
+- **Investment Objective:** Stable and tax-efficient income generation  
+""")
 
 st.markdown("---")
 st.caption("Created with ❤️ using Streamlit")
